@@ -1,5 +1,3 @@
-require 'formula'
-
 class CanteraAVBP < Formula
   homepage 'http://cerfacs.fr/cantera/'
   url "http://cerfacs.fr/cantera/cantera211.tar.gz"
@@ -68,5 +66,3 @@ class CanteraAVBP < Formula
     EOS
   end
 end
-
-__END__
