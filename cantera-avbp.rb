@@ -1,6 +1,6 @@
 require 'formula'
 
-class Cantera_AVBP < Formula
+class CanteraAVBP < Formula
   homepage 'http://cerfacs.fr/cantera/'
   url "http://cerfacs.fr/cantera/cantera211.tar.gz"
   sha1 "9153dde34d0226f0f4445a4a817d77a16caa89f5"
