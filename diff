@@ -1,0 +1,60 @@
+diff --git a/.gitignore b/.gitignore
+index f01b81e..0adc010 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -12,7 +12,6 @@ interfaces/matlab/ctpath.m
+ stage/
+ .sconsign.dblite
+ .sconf_temp
+-cantera.conf*
+ config.log
+ *.lib
+ *.exp
+diff --git a/SConstruct b/SConstruct
+index 13b8600..dab745f 100644
+--- a/SConstruct
++++ b/SConstruct
+@@ -533,6 +533,10 @@ config_options = [
+         'Location of the Boost header files',
+         defaults.boostIncDir, PathVariable.PathAccept),
+     PathVariable(
++        'gfortran_lib_dir',
++        'Directory containing the gfortran library',
++        defaults.boostLibDir, PathVariable.PathAccept),
++    PathVariable(
+         'boost_lib_dir',
+         'Directory containing the Boost.Thread library',
+         defaults.boostLibDir, PathVariable.PathAccept),
+diff --git a/interfaces/cython/SConscript b/interfaces/cython/SConscript
+index 768524e..42fa302 100644
+--- a/interfaces/cython/SConscript
++++ b/interfaces/cython/SConscript
+@@ -106,8 +106,11 @@ def install_module(prefix, python_version):
+ 
+ 
+ libDirs = ('../../build/lib', localenv['sundials_libdir'],
+-           localenv['blas_lapack_dir'], localenv['boost_lib_dir'])
+-localenv['py_cantera_libs'] = repr(localenv['cantera_libs'])
++           localenv['blas_lapack_dir'], localenv['boost_lib_dir'], localenv['gfortran_lib_dir'])
++#ORIlocalenv['py_cantera_libs'] = repr(localenv['cantera_libs'])
++CantLibs = localenv['cantera_libs']
++CantLibs.extend(localenv['FORTRANSYSLIBS'])
++localenv['py_cantera_libs'] = repr([x for x in CantLibs  if x])
+ localenv['py_libdirs'] = repr([x for x in libDirs if x])
+ 
+ # Compile the Python module with the same compiler as the rest of Cantera,
+diff --git a/src/SConscript b/src/SConscript
+index 8000a30..72b7c32 100644
+--- a/src/SConscript
++++ b/src/SConscript
+@@ -80,7 +80,8 @@ if localenv['layout'] != 'debian':
+                                        SPAWN=getSpawn(localenv)))
+     install('$inst_libdir', lib)
+     env['cantera_shlib'] = lib
+-    localenv.Append(LIBS='gfortran',
+-                        LIBPATH='/usr/lib64')
++#    localenv.Append(LIBS='gfortran',
++#                        LIBPATH='/usr/lib64')
++    localenv.Append(LIBS=localenv['FORTRANSYSLIBS'],LIBPATH=localenv['gfortran_lib_dir'])
+ 
+     localenv.Depends(lib, localenv['config_h_target'])
