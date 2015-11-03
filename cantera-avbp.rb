@@ -10,7 +10,7 @@ class CanteraAvbp < Formula
   depends_on "scons" => :build
   depends_on "numpy" => :python
   depends_on "cython" => :python
-  depends_on "sundials" => :recommended
+  depends_on "homebrew/science/sundials" => :recommended
   depends_on :python3 => :optional
   depends_on "graphviz" => :optional
 
@@ -114,7 +114,7 @@ index 1676e47..f27a214 100644
      try:
          import numpy as np
 -        hasSkipHeader = tuple(np.version.version.split('.')[:2]) >= ('1','4')
-+        hasSkipHeader = (int(n) for n in np.version.version.split('.')[:2]) >= (int(n) for n in ('1','4'))
++        hasSkipHeader = [int(n) for n in np.version.version.split('.')[:2]] >= [int(n) for n in ('1','4')]
      except ImportError:
          print 'WARNING: skipping .csv diff because numpy is not installed'
          return 0
