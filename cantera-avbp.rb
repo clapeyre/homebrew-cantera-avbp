@@ -8,6 +8,7 @@ class CanteraAvbp < Formula
 
   depends_on :python if MacOS.version <= :snow_leopard
   depends_on "scons" => :build
+  depends_on "gcc" => :build
   depends_on "numpy" => :python
   depends_on "cython" => :python
   depends_on "homebrew/science/sundials" => :recommended
