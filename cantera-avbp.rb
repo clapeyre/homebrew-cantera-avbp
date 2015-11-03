@@ -105,6 +105,19 @@ index 768524e..42fa302 100644
  localenv['py_libdirs'] = repr([x for x in libDirs if x])
  
  # Compile the Python module with the same compiler as the rest of Cantera,
+diff --git a/site_scons/buildutils.py b/site_scons/buildutils.py
+index 1676e47..f27a214 100644
+--- a/site_scons/buildutils.py
++++ b/site_scons/buildutils.py
+@@ -302,7 +302,7 @@ def compareCsvFiles(env, file1, file2):
+     """
+     try:
+         import numpy as np
+-        hasSkipHeader = tuple(np.version.version.split('.')[:2]) >= ('1','4')
++        hasSkipHeader = (int(n) for n in np.version.version.split('.')[:2]) >= (int(n) for n in ('1','4'))
+     except ImportError:
+         print 'WARNING: skipping .csv diff because numpy is not installed'
+         return 0
 diff --git a/src/SConscript b/src/SConscript
 index 8000a30..72b7c32 100644
 --- a/src/SConscript
