@@ -25,7 +25,8 @@ class CanteraAvbp < Formula
                   "python_package=new",
                   "CC=#{ENV.cc}",
                   "CXX=#{ENV.cxx}",
-                  "f90_interface=n"]
+                  "f90_interface=n",
+                  "gfortran_lib_dir=/usr/local/Cellar/gcc/5.1.0/lib/gcc/5/"]
 
     matlab_path = ARGV.value("with-matlab")
     build_args << "matlab_path=" + matlab_path if matlab_path
@@ -71,18 +72,6 @@ class CanteraAvbp < Formula
 end
 
 __END__
-diff --git a/.gitignore b/.gitignore
-index f01b81e..0adc010 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -12,7 +12,6 @@ interfaces/matlab/ctpath.m
- stage/
- .sconsign.dblite
- .sconf_temp
--cantera.conf*
- config.log
- *.lib
- *.exp
 diff --git a/SConstruct b/SConstruct
 index 13b8600..dab745f 100644
 --- a/SConstruct
