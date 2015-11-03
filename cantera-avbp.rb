@@ -22,10 +22,10 @@ class CanteraAvbp < Formula
     inreplace "src/base/ct2ctml.cpp", 's = "python";', 's = "/usr/local/bin/python";'
 
     build_args = ["prefix=#{prefix}",
-                  "python_package=new",
-                  "CC=#{ENV.cc}",
-                  "CXX=#{ENV.cxx}",
-                  "f90_interface=n",
+                  #"python_package=new",
+                  #"CC=#{ENV.cc}",
+                  #"CXX=#{ENV.cxx}",
+                  #"f90_interface=n",
                   "gfortran_lib_dir=/usr/local/Cellar/gcc/5.1.0/lib/gcc/5/"]
 
     matlab_path = ARGV.value("with-matlab")
