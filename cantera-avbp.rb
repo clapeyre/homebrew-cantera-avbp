@@ -74,64 +74,67 @@ end
 
 __END__
 diff --git a/SConstruct b/SConstruct
-index 13b8600..dab745f 100644
+index dab745f..13b8600 100644
 --- a/SConstruct
 +++ b/SConstruct
-@@ -533,6 +533,10 @@ config_options = [
+@@ -533,10 +533,6 @@ config_options = [
          'Location of the Boost header files',
          defaults.boostIncDir, PathVariable.PathAccept),
      PathVariable(
-+        'gfortran_lib_dir',
-+        'Directory containing the gfortran library',
-+        defaults.boostLibDir, PathVariable.PathAccept),
-+    PathVariable(
+-        'gfortran_lib_dir',
+-        'Directory containing the gfortran library',
+-        defaults.boostLibDir, PathVariable.PathAccept),
+-    PathVariable(
          'boost_lib_dir',
          'Directory containing the Boost.Thread library',
          defaults.boostLibDir, PathVariable.PathAccept),
 diff --git a/interfaces/cython/SConscript b/interfaces/cython/SConscript
-index 768524e..42fa302 100644
+index 42fa302..768524e 100644
 --- a/interfaces/cython/SConscript
 +++ b/interfaces/cython/SConscript
-@@ -106,8 +106,11 @@ def install_module(prefix, python_version):
+@@ -106,11 +106,8 @@ def install_module(prefix, python_version):
  
  
  libDirs = ('../../build/lib', localenv['sundials_libdir'],
--           localenv['blas_lapack_dir'], localenv['boost_lib_dir'])
--localenv['py_cantera_libs'] = repr(localenv['cantera_libs'])
-+           localenv['blas_lapack_dir'], localenv['boost_lib_dir'], localenv['gfortran_lib_dir'])
-+#ORIlocalenv['py_cantera_libs'] = repr(localenv['cantera_libs'])
-+CantLibs = localenv['cantera_libs']
-+CantLibs.extend(localenv['FORTRANSYSLIBS'])
-+localenv['py_cantera_libs'] = repr([x for x in CantLibs  if x])
+-           localenv['blas_lapack_dir'], localenv['boost_lib_dir'], localenv['gfortran_lib_dir'])
+-#ORIlocalenv['py_cantera_libs'] = repr(localenv['cantera_libs'])
+-CantLibs = localenv['cantera_libs']
+-CantLibs.extend(localenv['FORTRANSYSLIBS'])
+-localenv['py_cantera_libs'] = repr([x for x in CantLibs  if x])
++           localenv['blas_lapack_dir'], localenv['boost_lib_dir'])
++localenv['py_cantera_libs'] = repr(localenv['cantera_libs'])
  localenv['py_libdirs'] = repr([x for x in libDirs if x])
  
  # Compile the Python module with the same compiler as the rest of Cantera,
 diff --git a/site_scons/buildutils.py b/site_scons/buildutils.py
-index 1676e47..f27a214 100644
+index a8c8a6f..1676e47 100644
 --- a/site_scons/buildutils.py
 +++ b/site_scons/buildutils.py
-@@ -302,7 +302,7 @@ def compareCsvFiles(env, file1, file2):
+@@ -302,10 +302,7 @@ def compareCsvFiles(env, file1, file2):
      """
      try:
          import numpy as np
--        hasSkipHeader = tuple(np.version.version.split('.')[:2]) >= ('1','4')
-+        hasSkipHeader = [int(n) for n in np.version.version.split('.')[:2]] >= [int(n) for n in ('1','4')]
+-        hasSkipHeader = [int(n) for n in np.version.version.split('.')[:2]] >= [int(n) for n in ('1','4')]
+-        print (int(n) for n in np.version.version.split('.')[:2])
+-        print (int(n) for n in ('1','4'))
+-        print hasSkipHeader
++        hasSkipHeader = tuple(np.version.version.split('.')[:2]) >= ('1','4')
      except ImportError:
          print 'WARNING: skipping .csv diff because numpy is not installed'
          return 0
 diff --git a/src/SConscript b/src/SConscript
-index 8000a30..72b7c32 100644
+index 72b7c32..8000a30 100644
 --- a/src/SConscript
 +++ b/src/SConscript
-@@ -80,7 +80,8 @@ if localenv['layout'] != 'debian':
+@@ -80,8 +80,7 @@ if localenv['layout'] != 'debian':
                                         SPAWN=getSpawn(localenv)))
      install('$inst_libdir', lib)
      env['cantera_shlib'] = lib
--    localenv.Append(LIBS='gfortran',
--                        LIBPATH='/usr/lib64')
-+#    localenv.Append(LIBS='gfortran',
-+#                        LIBPATH='/usr/lib64')
-+    localenv.Append(LIBS=localenv['FORTRANSYSLIBS'],LIBPATH=localenv['gfortran_lib_dir'])
+-#    localenv.Append(LIBS='gfortran',
+-#                        LIBPATH='/usr/lib64')
+-    localenv.Append(LIBS=localenv['FORTRANSYSLIBS'],LIBPATH=localenv['gfortran_lib_dir'])
++    localenv.Append(LIBS='gfortran',
++                        LIBPATH='/usr/lib64')
  
      localenv.Depends(lib, localenv['config_h_target'])
 diff --git a/test_problems/SConscript b/test_problems/SConscript
