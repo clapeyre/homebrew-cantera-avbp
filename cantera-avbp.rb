@@ -1,7 +1,7 @@
 class CanteraAvbp < Formula
   homepage 'http://cerfacs.fr/cantera/'
   url "http://cerfacs.fr/cantera/cantera211.tar.gz"
-  sha1 "850618d7bf0832b3bd7608bca634c495e283f438"
+  sha1 "9515a6447d962317544b8e9bae28c6b3aa9a721f"
 
   option "with-matlab=", "Path to Matlab root directory"
   option "without-check", "Disable build-time checking (not recommended)"
