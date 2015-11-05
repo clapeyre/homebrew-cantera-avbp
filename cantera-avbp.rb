@@ -134,3 +134,24 @@ index 8000a30..72b7c32 100644
 +    localenv.Append(LIBS=localenv['FORTRANSYSLIBS'],LIBPATH=localenv['gfortran_lib_dir'])
  
      localenv.Depends(lib, localenv['config_h_target'])
+diff --git a/test_problems/SConscript b/test_problems/SConscript
+index d7a1df5..0e27b86 100644
+--- a/test_problems/SConscript
++++ b/test_problems/SConscript
+@@ -4,7 +4,6 @@ Import('env','build','install')
+ localenv = env.Clone()
+ localenv.Prepend(CPPPATH=['#include', '#src', 'shared'])
+ localenv.Append(CCFLAGS=env['warning_flags'])
+-localenv.Append(LIBPATH=localenv['gfortran_lib_dir'])
+ 
+ os.environ['PYTHONPATH'] = pjoin(os.getcwd(), '..', 'interfaces', 'python')
+ os.environ['CANTERA_DATA'] = pjoin(os.getcwd(), '..', 'build', 'data')
+@@ -107,7 +106,7 @@ class CompileAndTest(Test):
+     def run(self, env):
+         prog = env.Program(pjoin(self.subdir, self.programName),
+                            mglob(env, self.subdir, *self.extensions),
+-                           LIBS=localenv['FORTRANSYSLIBS'] +env['cantera_libs'])
++                           LIBS=env['cantera_libs'])
+         source = [prog]
+         return Test.run(self, env, *source)
+ 
