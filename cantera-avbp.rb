@@ -6,7 +6,8 @@ class CanteraAvbp < Formula
   option "with-matlab=", "Path to Matlab root directory"
   option "without-check", "Disable build-time checking (not recommended)"
 
-  depends_on :python if MacOS.version <= :snow_leopard
+  depends_on "python"
+  depends_on "open-mpi"
   depends_on "scons" => :build
   depends_on "gcc" => :build
   depends_on "numpy" => :python
@@ -23,7 +24,7 @@ class CanteraAvbp < Formula
     inreplace "src/base/ct2ctml.cpp", 's = "python";', 's = "/usr/local/bin/python";'
 
     build_args = ["prefix=#{prefix}",
-                  "gfortran_lib_dir=#{Formula.factory('gcc').opt_prefix}/lib/gcc/5"]
+                  "gfortran_lib_dir=#{Formula.factory('gcc').lib}/gcc/5"]
 
     matlab_path = ARGV.value("with-matlab")
     build_args << "matlab_path=" + matlab_path if matlab_path
