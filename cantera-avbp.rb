@@ -24,7 +24,7 @@ class CanteraAvbp < Formula
     inreplace "src/base/ct2ctml.cpp", 's = "python";', 's = "/usr/local/bin/python";'
 
     build_args = ["prefix=#{prefix}",
-                  "gfortran_lib_dir=#{Formula.factory('gcc').lib}/gcc/5"]
+                  "gfortran_lib_dir=#{Formula.factory('gcc').lib}/gcc/7"]
 
     matlab_path = ARGV.value("with-matlab")
     build_args << "matlab_path=" + matlab_path if matlab_path
